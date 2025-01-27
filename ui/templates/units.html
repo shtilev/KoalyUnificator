@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}>Юніти назви аналізів{% endblock %}
+
+{% block header %}Юніти назви аналізів{% endblock %}
+
+{% block content %}
+        <p align="center"><a href="/"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
+
+        <!-- Форма для додавання -->
+<h2>Додати новий юніт</h2>
+<form action="/add_unit" method="post">
+    <input type="text" name="standard_name" placeholder="Уніфіковане ім'я" required>
+    <input type="text" name="synonym" placeholder="Синонім" required>
+    <button type="submit">Додати</button>
+</form>
+
+
+
+        <section>
+            <h2>Оберіть юніт</h2>
+
+
+            <div class="synonyms-container">
+                {% for unit in units %}
+                <a href="/unit/{{ unit.id }}" class="synonyms-btn">{{ unit.unit }}</a>
+                {% endfor %}
+            </div>
+        </section>
+{% endblock %}

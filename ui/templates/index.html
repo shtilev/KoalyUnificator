@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Головна сторінка{% endblock %}
+
+{% block header %}Типу ОРМ{% endblock %}
+
+{% block content %}
+<section>
+            <h2>База</h2>
+            <div class="button-container">
+                <a href="/analysis" class="btn">Усі аналізи</a>
+                <a href="/conversions" class="btn">Конверсії</a>
+
+
+            </div>
+        </section>
+
+        <section>
+            <h2>Тести</h2>
+            <div class="button-container">
+                <a href="/unificator" class="btn">Тест уніфікатора назв показників</a>
+                <a href="/calculator" class="btn">Калькулятор</a>
+
+            </div>
+        </section>
+{% endblock %}

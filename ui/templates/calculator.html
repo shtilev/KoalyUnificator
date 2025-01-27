@@ -1,0 +1,27 @@
+<!-- templates/calculator.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Список аналізів{% endblock %}
+
+{% block header %}Список аналізів{% endblock %}
+
+{% block content %}
+<p align="center">
+    <a href="/"><img src="/static/images/back.png" width="3%"><br>Назад</a>
+</p>
+
+<h2>Виберіть аналіз для конверсії</h2>
+            <div>
+                <div class="synonyms-container" align="center">
+                    {% for letter in 'АБВГҐДЕЄЖЗИІЙКЛМНОПРСТУФХЦЧШЩЬЮЯ1' %}
+                        <a href="/calculator?filter_letter={{ letter }}" style="font-size:35px;">{{ letter }}</a> |
+                    {% endfor %}
+                </div>
+            </div>
+<div class="synonyms-container">
+    {% for standard_name in analyses %}
+    <a href="/calculator_result/{{ standard_name.id }}" class="synonyms-btn">{{ standard_name.name }}</a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Конверсії для аналізу {{ analysis_name }}{% endblock %}
+
+{% block header %}Конверсії для аналізу {{ analysis_name }}{% endblock %}
+
+{% block content %}
+<p align="center">
+    <a href="/conversions"><img src="/static/images/back.png" width="3%"><br>Назад</a>
+</p>
+
+            <h2>Генерувати конверсії через ЛЛМ:</h2>
+            <form action="/generate_conversion" method="post">
+                <input type="hidden" name="standard_name_id" value="{{ analysis_id }}">
+                <button type="submit">Почати</button>
+            </form>
+            {% if message %}
+                <p align="center">{{ message }}</p>
+            {% endif %}
+
+<table border="1" align="center">
+    <tr>
+        <td>
+<h2>Додати нову конверсію</h2>
+        </td></tr><tr><td>
+<form action="/create_conversion" method="post" style="display:inline;" class="form-delete">
+    <input type="hidden" name="standard_name_id" value="{{ analysis_id }}">
+
+    <!-- Выпадающий список для From Unit -->
+    <label for="from_unit_id">From Unit:</label>
+    <select name="from_unit_id" required>
+        {% for unit in units %}
+            <option value="{{ unit.id }}">{{ unit.unit }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Выпадающий список для To Unit -->
+    <label for="to_unit_id">To Unit:</label>
+    <select name="to_unit_id" required>
+        {% for unit in units %}
+            <option value="{{ unit.id }}">{{ unit.unit }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Ввод для формулы -->
+    <label for="formula">Formula:</label>
+    <input type="text" name="formula" required>
+
+    <button type="submit" class="btn-submit">Додати конверсію</button>
+</form>
+
+        </td>
+    </tr>
+</table>
+
+
+<h2>Існуючі конверсії</h2>
+<table border="1" align="center">
+    <tr>
+        <th>ID</th>
+        <th>From Unit</th>
+        <th>To Unit</th>
+        <th>Formula</th>
+        <th>Дії</th>
+    </tr>
+    {% for conversion in conversions %}
+    <tr>
+        <td>{{ conversion.id }}</td>
+
+        <!-- From Unit -->
+        <td>
+            {% for unit in units %}
+                {% if unit.id == conversion.from_unit_id %}
+                    {{ unit.unit }}
+                {% endif %}
+            {% endfor %}
+        </td>
+
+        <!-- To Unit -->
+        <td>
+            {% for unit in units %}
+                {% if unit.id == conversion.to_unit_id %}
+                    {{ unit.unit }}
+                {% endif %}
+            {% endfor %}
+        </td>
+
+        <td>{{ conversion.formula }}</td>
+
+        <td>
+            <!-- Форма для редагування конверсії -->
+            <form action="/update_conversion" method="post" style="display:inline;" class="form-delete">
+                <input type="hidden" name="conversion_id" value="{{ conversion.id }}">
+                <input type="text" name="formula" value="{{ conversion.formula }}" required>
+                <button type="submit" class="btn-edit">Зберегти</button>
+            </form>
+
+            <!-- Форма для видалення конверсії -->
+            <form action="/delete_conversion" method="post" style="display:inline;" class="form-delete">
+                <input type="hidden" name="conversion_id" value="{{ conversion.id }}">
+                <button type="submit" class="btn-delete">Видалити</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

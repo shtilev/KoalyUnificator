@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Аналіз: {{ analysis.name }}{% endblock %}
+
+{% block header %}Аналіз: {{ analysis.name }}{% endblock %}
+
+{% block content %}
+<p align="center"><a href="/analysis"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
+
+<table style="border-collapse: collapse;">
+    <tr>
+        <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top;">
+            <h2>Управління:</h2>
+            <div align="center">
+            <form action="/delete_analyse" method="post" class="form-delete">
+                <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
+                <button type="submit" class="btn-delete">
+                    Видалити цей аналіз
+                </button>
+            </form>
+                <br>
+                <form class="form-delete" style="display:inline;">
+            <a href="/calculator_result/{{ analysis.id }}" class="btn-edit">Калькулятор</a>
+
+            <a href="/conversions/{{ analysis.id }}" class="btn-edit">Конверсіі</a>
+
+                    </form>
+                </div>
+        </td>
+        <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top;">
+            <h2>Додати новий синонім:</h2>
+            <form action="/add_analysis_synonym" method="post">
+                <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
+                <input type="text" name="synonym" placeholder="Синонім" required>
+                <button type="submit">Додати</button>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top;">
+            <h2>Генерувати синоніми через ЛЛМ:</h2>
+            <form action="/generate_analyse_synonym" method="post">
+                <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
+                <input type="number" name="count" placeholder="Скільки раз генерувати?" required>
+                <button type="submit">Почати</button>
+            </form>
+            {% if message %}
+                <p align="center">{{ message }}</p>
+            {% endif %}
+        </td>
+        <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top;">
+            <h2>Додати новий юніт:</h2>
+            <form action="/add_unit" method="post">
+                <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
+                <input type="text" name="unit_name" placeholder="Назва юніта" required>
+                <input type="checkbox" name="is_standard"> Стандарт
+                <button type="submit">Додати</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+
+<h2>Юніти:</h2>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Назва</th>
+        <th>Перейменувати або видалити</th>
+    </tr>
+    {% for unit in analysis.units %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td{% if unit == analysis.standard_unit %} style="font-weight: bold; color: green;"{% endif %}>
+            {{ unit.unit }}
+        </td>
+        <td>
+            <!-- Форма для редагування юніта -->
+            <form action="/update_unit" method="post" style="display:inline;" class="form-delete">
+                <input type="hidden" name="unit_id" value="{{ unit.id }}">
+                <input type="text" name="unit_name" value="{{ unit.unit }}" placeholder="Введіть нову назву юніта" required>
+                <!-- Галочка для стандартного юніта -->
+                <input type="checkbox" name="is_standard" {% if unit == analysis.standard_unit %}checked{% endif %}> Стандарт
+                <button type="submit" class="btn-edit">Перейменувати</button>
+            </form>
+
+            <!-- Форма для видалення юніта -->
+<form action="/delete_unit" method="post" style="display:inline;" class="form-delete">
+    <input type="hidden" name="unit_id" value="{{ unit.id }}">
+    <button type="submit" class="btn-delete">Видалити</button>
+</form>
+
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+
+<h2>Синоніми:</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Синонім</th>
+            <th>Перейменувати або видалити</th>
+        </tr>
+        {% for synonym in synonyms %}
+        <tr>
+            <td>{{ synonym.id }}</td>
+            <td>{{ synonym.synonym }}</td>
+            <td>
+                <form action="/update_analysis_synonym" method="post" class="form-delete" style="display:inline;">
+                    <input type="hidden" name="synonym_id" value="{{ synonym.id }}">
+                    <input type="text" name="new_synonym" value="{{ synonym.synonym }}">
+                    <button type="submit" class="btn-edit">Перейменувати</button>
+                </form>
+                <form action="/remove_analysis_synonym" method="post" style="display:inline;" class="form-delete">
+                    <input type="hidden" name="synonym_id" value="{{ synonym.id }}" >
+                    <button type="submit" class="btn-delete">Видалити</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

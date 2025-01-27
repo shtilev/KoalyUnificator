@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Конверсіі для аналізів{% endblock %}
+
+{% block header %}Конверсіі для аналізів{% endblock %}
+
+{% block content %}
+        <p align="center"><a href="/"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
+
+
+
+        <section>
+            <h2>Оберіть уніфіковане ім'я</h2>
+            <div>
+                <div class="synonyms-container" align="center">
+                    {% for letter in 'АБВГҐДЕЄЖЗИІЙКЛМНОПРСТУФХЦЧШЩЬЮЯ1' %}
+                        <a href="/analysis?filter_letter={{ letter }}" style="font-size:35px;">{{ letter }}</a> |
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="synonyms-container">
+                {% for name in analyses %}
+                <a href="/conversions/{{ name.id }}" class="synonyms-btn">{{ name.name }}</a>
+                {% endfor %}
+            </div>
+        </section>
+{% endblock %}

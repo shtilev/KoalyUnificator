@@ -1,0 +1,108 @@
+<!-- templates/calculator_result.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Калькулятор для {{ standard_name }}{% endblock %}
+
+{% block header %}Калькулятор для {{ standard_name }}{% endblock %}
+
+{% block content %}
+<p align="center">
+    <a href="/calculator"><img src="/static/images/back.png" width="3%"><br>Назад</a>
+</p>
+
+
+<table border="1" align="center">
+    <thead>
+        <tr>
+            <th>Одиниця вимірювання</th>
+            <th>Значення</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for unit in units %}
+        <tr>
+            <td class="{{ 'standard-unit' if unit.is_standard else '' }}">
+                {{ unit.unit }}
+            </td>
+                <td>
+                    <input
+                        type="number"
+                        step="any"
+                        id="unit_{{ unit.id }}"
+                        data-unit-id="{{ unit.id }}"
+                        data-is-standard="{{ 'true' if unit.is_standard else 'false' }}"
+                        class="{{ 'standard-unit-input' if unit.is_standard else '' }}"
+                        oninput="convertValues(this)"
+                        placeholder="Введіть значення"
+                        value="{{ 1 if unit.is_standard else '' }}"
+                    />
+                </td>
+
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    // Функція для автоматичного встановлення значення стандартної одиниці
+function setStandardUnitValue() {
+    const standardUnitInput = document.querySelector('[data-is-standard="true"]'); // Змінили "True" на "true"
+    if (standardUnitInput) {
+        const value = parseFloat(standardUnitInput.value) || 1; // Встановлюємо 1, якщо значення не задано
+        standardUnitInput.value = value; // Встановлюємо значення
+        convertValues(standardUnitInput); // Перераховуємо для всіх одиниць
+    }
+}
+
+
+    // Викликається після завантаження сторінки для ініціалізації
+    window.onload = () => {
+        setStandardUnitValue(); // Запускаємо після завантаження сторінки
+    };
+
+    // Функція для виклику API конверсії
+    async function convertValues(inputElement) {
+        const unitId = inputElement.dataset.unitId;
+        const value = parseFloat(inputElement.value);
+
+        if (isNaN(value)) {
+            return; // Якщо значення некоректне, нічого не робимо
+        }
+
+        try {
+            const response = await fetch("/convert_units", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    value: value,
+                    from_unit_id: unitId,
+                    standard_name_id: {{ standard_name_id }},
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP помилка: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Оновлюємо всі відповідні поля
+            for (const [id, convertedValue] of Object.entries(data.results)) {
+                const targetInput = document.getElementById(`unit_${id}`);
+                if (targetInput) {
+                    targetInput.value = convertedValue; // Оновлюємо значення
+                }
+            }
+        } catch (error) {
+            console.error("Помилка конверсії:", error);
+            alert("Виникла проблема під час конверсії. Спробуйте пізніше.");
+        }
+    }
+</script>
+
+
+{% endblock %}

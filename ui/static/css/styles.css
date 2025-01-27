@@ -1,0 +1,343 @@
+/* Загальні стилі для сторінки */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc; /* Світло-сірий фон */
+    color: #333;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+h1 {
+    color: #3c8dbc; /* Головний колір для заголовка */
+    font-size: 2.2em;
+}
+
+h2 {
+    color: #6c757d; /* Легкий сірий для підзаголовків */
+    font-size: 1.6em;
+}
+
+/* Посилання */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+    transform: scale(1.05); /* Легке збільшення при наведенні */
+}
+
+/* Параграф з посиланням назад */
+p {
+      font-size: 20px;
+
+}
+p a {
+    color: #6c757d;
+    font-size: 1.1em;
+}
+
+p a:hover {
+    color: #007bff;
+    transform: scale(1.05);
+}
+
+/* Форма для додавання синоніма */
+form {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-delete {
+    background-color: transparent; /* Прибираємо фон */
+    padding: 0; /* Прибираємо відступи */
+    border-radius: 0; /* Прибираємо закруглення */
+    margin: 0; /* Прибираємо зовнішні відступи */
+    width: auto; /* Скидаємо ширину */
+    max-width: none; /* Прибираємо обмеження ширини */
+}
+
+
+
+form input[type="text"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+form input[type="number"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+
+form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Легке збільшення при наведенні */
+}
+
+/* Таблиця з синонімами */
+table {
+    width: 90%;
+    align:center;
+    margin: 100px;
+    border-collapse: collapse;
+    margin: 20px
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+    font-size: 1.1em;
+}
+
+table th {
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Основні стилі для кнопок */
+button, .btn-delete, .btn-edit {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    margin-right: 12px;
+}
+
+/* Кнопка видалити */
+.btn-delete {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    max-width: 200px;
+}
+
+.btn-delete:hover {
+    background-color: #c9302c;
+    transform: scale(1.02);
+}
+
+/* Кнопка редагувати */
+.btn-edit {
+    background-color: #f0ad4e;
+    color: white;
+    border: none;
+    border: none;
+    max-width: 200px;
+}
+
+.btn-edit:hover {
+    background-color: #ec971f;
+    transform: scale(1.02);
+    color: #FFFFFF;
+}
+
+/* Спеціальні стилі для сповіщень та помилок */
+.alert {
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 1em;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.4em;
+    }
+
+    form {
+        width: 100%;
+    }
+}
+
+
+label {
+    font-size: 1em;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+/* Для label, що знаходиться в рамках форми */
+form label {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 10px;
+    display: inline-block;
+    font-weight: bold;
+}
+
+
+/* Стилі для кнопок */
+.button-container {
+    display: flex;
+    flex-direction: column; /* Розміщуємо кнопки вертикально */
+    align-items: center; /* Центруємо кнопки по горизонталі */
+    gap: 15px; /* Відступи між кнопками */
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block; /* Робимо кнопки блочними елементами */
+}
+
+.btn:hover {
+    color: #FFFFFF;
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+ul {
+    display: none;
+}
+
+.synonyms-container {
+    display: row;
+    margin: 30px;
+    align: center;
+}
+
+.synonyms-btn {
+    padding: 12px 30px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block; /* Робимо кнопки блочними елементами */
+}
+
+.synonyms-btn:hover {
+    color: #FFFFFF;
+    background-color: #0056b3;
+    transform: scale(1.02);
+}
+
+
+/* Виділення клітинки для стандартної одиниці */
+.standard-unit {
+    background-color: #f0f8ff; /* Світлий фон для клітинки стандартної одиниці */
+    font-weight: bold; /* Товстий шрифт */
+    color: #333; /* Темний текст */
+}
+
+/* Виділення поля вводу для стандартної одиниці */
+.standard-unit-input {
+    background-color: #e0ffe0; /* Легкий зелений фон для поля вводу стандартної одиниці */
+    border: 2px solid #4CAF50; /* Зелене обрамлення для стандартної одиниці */
+    font-weight: bold; /* Товстий шрифт */
+}
+
+/* Стиль при фокусі на стандартній одиниці */
+.standard-unit-input:focus {
+    border-color: #2E8B57; /* Темно-зелене обрамлення при фокусі */
+    outline: none; /* Вимикає стандартне обрамлення при фокусі */
+}
+
+
+

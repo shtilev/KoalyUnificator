@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Уніфіковані назви аналізів{% endblock %}
+
+{% block header %}Уніфіковані назви аналізів{% endblock %}
+
+{% block content %}
+        <p align="center"><a href="/"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
+
+        <!-- Форма для додавання -->
+<h2>Додати нову уніфіковану назву</h2>
+<form action="/add_analyse" method="post">
+    <input type="text" name="standard_name" placeholder="Уніфіковане ім'я" required>
+    <input type="text" name="synonym" placeholder="Синонім" required>
+    <button type="submit">Додати</button>
+</form>
+
+
+
+        <section>
+            <h2>Оберіть уніфіковане ім'я</h2>
+            <div>
+                <div class="synonyms-container" align="center">
+                    {% for letter in 'АБВГҐДЕЄЖЗИІЙКЛМНОПРСТУФХЦЧШЩЬЮЯ1' %}
+                        <a href="/analysis?filter_letter={{ letter }}" style="font-size:35px;">{{ letter }}</a> |
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="synonyms-container">
+                {% for name in analyses %}
+                <a href="/analysis/{{ name.id }}" class="synonyms-btn">{{ name.name }}</a>
+                {% endfor %}
+            </div>
+        </section>
+{% endblock %}
