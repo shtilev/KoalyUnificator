@@ -96,6 +96,22 @@ class UnitConversion(Base):
         UniqueConstraint("from_unit_id", "to_unit_id", name="unique_conversion_constraint"),
     )
 
+
+class Dynamic(Base):
+    __tablename__ = "dynamic"
+    id = Column(Integer, primary_key=True, index=True)
+    analysis_id = Column(Integer, ForeignKey("standard_names.id"), nullable=False, unique=True)
+
+    # Зв'язок з таблицею StandardName
+    analysis = relationship("StandardName")
+
+    # Унікальне обмеження для analysis_id, щоб уникнути дублікатів
+    __table_args__ = (
+        UniqueConstraint("analysis_id", name="unique_dynamic_analysis_constraint"),
+    )
+
+
+
 def init_db():
     Base.metadata.create_all(bind=engine)
 

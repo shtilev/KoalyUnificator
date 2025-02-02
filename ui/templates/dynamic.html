@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Динаміка{% endblock %}
+
+{% block header %}Динаміка{% endblock %}
+
+{% block content %}
+    <p align="center">
+        <a href="/">
+            <img src="/static/images/back.png" width="3%"><br>Назад
+        </a>
+    </p>
+
+    <!-- Форма для додавання -->
+    <h2>Додати новий аналіз у динаміку</h2>
+    <form action="/add_dynamic" method="post">
+        <select name="analysis_id" required>
+            <option value="" disabled selected>Оберіть аналіз</option>
+            {% for analysis in analysis_list %}
+                <option value="{{ analysis.id }}">{{ analysis.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Додати</button>
+    </form>
+
+    <!-- Таблиця доданих записів -->
+    <section>
+        <h2>Додані у динаміку аналізи</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Аналіз</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in dynamic %}
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.analysis.name }}</td>
+                    <td>
+                        <form action="/delete_dynamic" method="post" class="form-delete">
+                            <input type="hidden" name="analysis_id" value="{{ entry.id }}">
+                            <button type="submit" class="btn-delete">Видалити</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
