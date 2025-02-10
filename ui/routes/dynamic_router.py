@@ -21,12 +21,18 @@ templates = Jinja2Templates(directory="ui/templates")
 @router.get("/dynamic", response_class=HTMLResponse)
 async def get_all_dynamics(request: Request, db: Session = Depends(get_db)):
     dynamics = get_all_dynamic_entries(db)
-    analysis = get_analysis(db)
+    existing_analysis_ids = {entry.analysis_id for entry in dynamics}
+
+    all_analysis = get_analysis(db)
+    filtered_analysis = [a for a in all_analysis if a["id"] not in existing_analysis_ids]
+
     return templates.TemplateResponse("dynamic.html", {
         "request": request,
         "dynamic": dynamics,
-        "analysis_list": analysis
+        "analysis_list": filtered_analysis
     })
+
+
 
 
 @router.post("/add_dynamic")

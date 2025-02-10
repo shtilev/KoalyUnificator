@@ -6,7 +6,8 @@
 
 {% block content %}
 <p align="center"><a href="/analysis"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
-
+<p align="center">* спочатку генеруємо синоніми, а потім редагуємо їх під таблицею з юнітами
+</p>
 <table style="border-collapse: collapse;">
     <tr>
         <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top;">
@@ -23,6 +24,7 @@
             <a href="/calculator_result/{{ analysis.id }}" class="btn-edit">Калькулятор</a>
 
             <a href="/conversions/{{ analysis.id }}" class="btn-edit">Конверсіі</a>
+            <p><a href="/dynamic/" class="btn-edit">До динаміки</a></p>
 
                     </form>
                 </div>

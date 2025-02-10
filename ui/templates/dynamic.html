@@ -10,6 +10,7 @@
             <img src="/static/images/back.png" width="3%"><br>Назад
         </a>
     </p>
+<p align="center">* до динаміки додаються ті аналізи з загального списку, які будуть надалі використовуватись для побудови динаміки
 
     <!-- Форма для додавання -->
     <h2>Додати новий аналіз у динаміку</h2>
@@ -41,9 +42,12 @@
                     <td>{{ entry.analysis.name }}</td>
                     <td>
                         <form action="/delete_dynamic" method="post" class="form-delete">
-                            <input type="hidden" name="analysis_id" value="{{ entry.id }}">
+                            <input type="hidden" name="analysis_id" value="{{ entry.analysis_id }}">
                             <button type="submit" class="btn-delete">Видалити</button>
+                            <a href="/analysis/{{ entry.analysis_id }}" class="btn-edit">Перейти до аналізу</a>
+
                         </form>
+
                     </td>
                 </tr>
                 {% endfor %}
