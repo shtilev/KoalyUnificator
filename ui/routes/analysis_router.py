@@ -60,12 +60,14 @@ async def remove_analyse(analysis_id: int = Form(...),
     return RedirectResponse(url="/analysis", status_code=303)
 
 
-
 @router.get("/analysis/{analysis_id}", response_class=HTMLResponse)
 def read_analysis_detail(analysis_id: int, request: Request, db: Session = Depends(get_db)):
     analysis_detail = get_analysis_detail(db, analysis_id)
     if not analysis_detail:
         raise HTTPException(status_code=404, detail="Analysis not found")
+
+    synonyms_count = len(analysis_detail["synonyms"])
+
     return templates.TemplateResponse(
         "analysis_detail.html",
         {
@@ -76,10 +78,10 @@ def read_analysis_detail(analysis_id: int, request: Request, db: Session = Depen
                 "standard_unit": analysis_detail["standard_unit"],
                 "units": analysis_detail["units"],
             },
-            "synonyms": analysis_detail["synonyms"]
+            "synonyms": analysis_detail["synonyms"],
+            "synonyms_count": synonyms_count
         }
     )
-
 
 
 @router.post("/add_analysis_synonym")
@@ -165,3 +167,16 @@ async def update_unit_route(
         return RedirectResponse(url=f"/analysis/{updated_unit.standard_name_id}", status_code=303)
 
     raise HTTPException(status_code=404, detail="Unit not found")
+
+
+@router.post("/remove_selected_synonyms")
+async def remove_selected_synonyms(selected_synonyms: list[int] = Form(...), db: Session = Depends(get_db)):
+    if not selected_synonyms:
+        raise HTTPException(status_code=400, detail="No synonyms selected for deletion")
+
+    # Видалення вибраних синонімів
+    for synonym_id in selected_synonyms:
+        remove_analysis_synonym(db, synonym_id)
+
+    return RedirectResponse(url="/analysis", status_code=303)
+

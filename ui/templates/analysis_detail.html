@@ -2,13 +2,24 @@
 
 {% block title %}Аналіз: {{ analysis.name }}{% endblock %}
 
-{% block header %}Аналіз: {{ analysis.name }}{% endblock %}
+{% block header %}Аналіз: <u>{{ analysis.name }}</u>{% endblock %}
 
 {% block content %}
 <p align="center"><a href="/analysis"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
-<p align="center">* спочатку генеруємо синоніми, а потім редагуємо їх під таблицею з юнітами
+  <p align="center">  ** Кількість синонімів: <b>{{ synonyms_count }}</b>
+
 </p>
-<table style="border-collapse: collapse;">
+
+
+<p align="center">
+<button class="toggle-btn" data-target="management-table">Управління</button>
+<button class="toggle-btn" data-target="units-table">Юніти</button>
+<button class="toggle-btn" data-target="synonyms-table">Синоніми</button>
+</p>
+
+
+
+<table style="border-collapse: collapse; display: none;" id="management-table">
     <tr>
         <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top;">
             <h2>Управління:</h2>
@@ -63,9 +74,8 @@
 </table>
 
 
-<h2>Юніти:</h2>
 
-<table border="1">
+<table border="1" id="units-table" style="display: none;">
     <tr>
         <th>ID</th>
         <th>Назва</th>
@@ -99,15 +109,13 @@
 </table>
 
 
-
-
-
-<h2>Синоніми:</h2>
-    <table border="1">
+<form action="/remove_selected_synonyms" method="post" class="form-delete">
+    <table id="synonyms-table" style="display: none;">
         <tr>
             <th>ID</th>
             <th>Синонім</th>
             <th>Перейменувати або видалити</th>
+            <th>Обрати</th>
         </tr>
         {% for synonym in synonyms %}
         <tr>
@@ -120,12 +128,47 @@
                     <button type="submit" class="btn-edit">Перейменувати</button>
                 </form>
                 <form action="/remove_analysis_synonym" method="post" style="display:inline;" class="form-delete">
-                    <input type="hidden" name="synonym_id" value="{{ synonym.id }}" >
+                    <input type="hidden" name="synonym_id" value="{{ synonym.id }}">
                     <button type="submit" class="btn-delete">Видалити</button>
                 </form>
             </td>
+            <td>
+                <p align="center"> <input type="checkbox" name="selected_synonyms" value="{{ synonym.id }}"></p>
+            </td>
         </tr>
         {% endfor %}
+        <tr>
+            <td colspan="4">
+                <p align="center"> <button type="submit" class="btn-delete">Видалити вибрані</button></p>
+            </td>
+        </tr>
     </table>
+</form>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Отримуємо всі кнопки для розкриття/скривання
+        const toggleButtons = document.querySelectorAll('.toggle-btn');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Отримуємо id таблиці, яку треба відкрити/закрити
+                const targetId = button.getAttribute('data-target');
+                const targetTable = document.getElementById(targetId);
+
+                // Перемикаємо видимість таблиці
+                if (targetTable.style.display === 'none') {
+                    targetTable.style.display = 'table'; // Покажемо таблицю
+                } else {
+                    targetTable.style.display = 'none'; // Сховаємо таблицю
+                }
+            });
+        });
+    });
+</script>
+
 
 {% endblock %}
+
+
