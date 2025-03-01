@@ -73,9 +73,9 @@ def create_synonyms_for_standard_name(db: Session, standard_name_id: int):
 
         Не включайте значення, що належать іншим показникам навіть із подібними назвами (наприклад, 'Гемоглобін А' або 'Глікогемоглобін' не слід включати).
         
-        В базе вже є:{str(synonyms)}
+        В базе вже є (їх не потрібно додавати):{str(synonyms)}
         """
-
+        print(prompt)
         response_dict = get_llm_response(prompt, SynonymsList)
 
         # Перевірка наявності синонімів у відповіді
