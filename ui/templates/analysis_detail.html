@@ -10,6 +10,17 @@
 
 </p>
 
+<p align="center">
+
+        <a href="/analysis/{{ analysis.id - 1 }}" title="Попередній аналіз">
+            << Попередній
+        </a>
+|
+        <a href="/analysis/{{ analysis.id + 1 }}" title="Наступний аналіз">
+            Наступний >>
+        </a>
+</p>
+
 
 <p align="center">
 <button class="toggle-btn" data-target="management-table">Управління</button>
@@ -54,7 +65,7 @@
             <h2>Генерувати синоніми через ЛЛМ:</h2>
             <form action="/generate_analyse_synonym" method="post">
                 <input type="hidden" name="analysis_id" value="{{ analysis.id }}">
-                <input type="number" name="count" placeholder="Скільки раз генерувати?" required>
+                <input type="number" name="count" value="1" required>
                 <button type="submit">Почати</button>
             </form>
             {% if message %}

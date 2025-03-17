@@ -5,18 +5,35 @@
 {% block header %}Тест уніфікатора аналізів{% endblock %}
 
 {% block content %}
-    <p align="center"><a href="/"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
+<p align="center"><a href="/"><img src="/static/images/back.png" width="3%"><br>Назад</a></p>
 
+<!-- Форма для пошуку через уніфікатор -->
+<form action="/unificator" method="post">
+    <label for="synonym">Стандартний пошук по базі за збігом:</label>
+    <input type="text" id="synonym" name="synonym" required>
+    <label for="threshold">Поріг схожості (0-100):</label>
+    <input type="number" id="threshold" name="threshold" value="80" min="0" max="100" required>
+    <button type="submit">Перевірити</button>
+</form>
 
-    <form action="/unificator" method="post">
-        <label for="synonym">Введіть синонім або назву:</label>
-        <input type="text" id="synonym" name="synonym" required>
-        <label for="threshold">Поріг схожості (0-100):</label>
-        <input type="number" id="threshold" name="threshold" value="80" min="0" max="100" required>
-        <button type="submit">Перевірити</button>
-    </form>
-    {% if result %}
-    <h2>Результат:</h2>
-    <p align="center">{{ result }}</p>
-    {% endif %}
+{% if result %}
+<h2>Результат:</h2>
+<p align="center">{{ result }}</p>
+{% endif %}
+
+<br>
+
+<!-- Форма для пошуку через FAISS -->
+<form action="/unificator_faiss" method="post">
+    <label for="query">Пошук по векторному прострастнству FAISS:</label>
+    <input type="text" id="query" name="query" required>
+    <button type="submit">Пошук</button>
+</form>
+
+{% if faiss_result %}
+<h2>Результат пошуку через FAISS:</h2>
+<p align="center">{{ faiss_result.result }}</p>
+<p align="center">Впевненість: {{ faiss_result.confidence | round(2) }}</p>
+{% endif %}
+
 {% endblock %}

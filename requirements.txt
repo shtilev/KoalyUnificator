@@ -9,3 +9,8 @@ jinja2
 python-multipart
 python-dotenv
 fuzzywuzzy
+# faiss
+faiss-cpu==1.7.4
+transformers==4.39.3
+torch==2.1.0
+

@@ -121,7 +121,6 @@ async def generate_analyse_synonym(request: Request,
     return RedirectResponse(url=f"/analysis/{analysis_id}", status_code=303)
 
 
-
 @router.post("/add_unit")
 async def add_unit(
         analysis_id: int = Form(...),

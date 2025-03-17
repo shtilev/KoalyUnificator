@@ -54,53 +54,115 @@ def get_llm_response(prompt: str, response_model, model="gpt-4o-mini"):
     return reasoning_dict
 
 
+# def create_synonyms_for_standard_name(db: Session, standard_name_id: int):
+#
+#     added_synonyms = []
+#
+#     analyse_info = get_analysis_detail(db, standard_name_id)
+#     standard_name = analyse_info.get('name')
+#     synonyms = analyse_info.get('synonyms')
+#     try:
+#         # Формулюємо запит до OpenAI
+#         prompt = f"""
+#         Це завдання для створення **векторного простору** для медичних термінів.
+#         Перелічіть **усі можливі варіанти написання** для медичного терміну **"{standard_name}"**.
+#         Усі варіанти мають стосуватися **виключно цього показника** і враховувати можливі варіанти, які зустрічаються в реальних медичних документах, лабораторних результатах та аналізах.
+#         Важливо, щоб усі варіанти були **семантично близькими** для побудови точного векторного представлення.
+#
+#         **Включіть наступні типи варіантів:**
+#         - ✅ **Абревіатури та скорочення** (наприклад, 'Гемоглобін' > 'HGB', 'Hb').
+#         - ✅ **Переклади та альтернативні назви** (наприклад, 'Гемоглобін', 'Hemoglobin', 'Hgb') — враховуйте назви для українського та міжнародного сегменту.
+#         - ✅ **Варіанти з типовими помилками або орфографічними відхиленнями** (якщо такі поширені у реальних документах).
+#
+#         **Не включайте:**
+#         - ❌ Значення, що належать до інших показників навіть із подібними назвами (наприклад, 'Гемоглобін А', 'Глікогемоглобін' тощо).
+#         - ❌ Зайві уточнення та загальні фрази ("тест на", "у крові", "у сечі", "загальний", "у сироватці", "аналіз") — залишайте тільки основний показник, щоб уникнути шуму у векторному просторі.
+#
+#         **Ціль — створити чисте і точне векторне представлення для цього показника у векторному просторі.**
+#
+#         **Відомі варіанти, які вже є в базі (не потрібно додавати):**
+#         {str(synonyms)}
+#
+#         """
+#
+#         response_dict = get_llm_response(prompt, SynonymsList)
+#
+#         # Перевірка наявності синонімів у відповіді
+#         if "list_of_synonyms" in response_dict:
+#             list_of_synonyms = response_dict["list_of_synonyms"]
+#             for synonym_data in list_of_synonyms:
+#                 # Перевіряємо, чи вже існує синонім для цього стандартного імені
+#                 existing_synonym = db.query(AnalysisSynonym).join(StandardName).filter(
+#                     StandardName.id == standard_name_id,
+#                     AnalysisSynonym.synonym == synonym_data
+#                 ).first()
+#
+#                 if not existing_synonym:
+#                     # Якщо синоніма немає, додаємо його
+#                     add_analysis_synonym(db, standard_name_id, synonym_data)
+#                     added_synonyms.append(synonym_data)  # Додаємо до списку доданих синонімів
+#                     print(f'Синонім {synonym_data} для {standard_name} успішно додано')
+#                 else:
+#                     print(f"Синонім '{synonym_data}' для '{standard_name}' вже існує.")
+#
+#         return added_synonyms
+#     finally:
+#         db.close()
+
+
 def create_synonyms_for_standard_name(db: Session, standard_name_id: int):
-
     added_synonyms = []
-
     analyse_info = get_analysis_detail(db, standard_name_id)
     standard_name = analyse_info.get('name')
     synonyms = analyse_info.get('synonyms')
-    try:
-        # Формулюємо запит до OpenAI
-        prompt = f"""
-        Перелічіть усі можливі варіанти написання для медичного терміну: {standard_name}. Усі варіанти мають стосуватися виключно цього показника ({standard_name}) і враховувати можливі написання, які можуть зустрічатися в різних медичних документах, лабораторних результатах, аналізах тощо. 
-        Включіть варіанти з такими особливостями: 
-        - Різні абревіатури або скорочення (наприклад, 'Гемоглобін' > 'HGB', 'Hb').
-        - Варіанти з уточненнями (наприклад, '{standard_name} у крові', ' Тест на {standard_name}' - додавай реальні приклади з медичних аналізів і інших документів).
-        - Переклади та альтернативні назви (наприклад, 'Гемоглобін', 'Hemoglobin', 'Hgb'). Орієнтуйся на назви для україньского сегменту.
-        - Можливі помилки або варіації у написанні, якщо вони поширені у реальних документах.
 
-        Не включайте значення, що належать іншим показникам навіть із подібними назвами (наприклад, 'Гемоглобін А' або 'Глікогемоглобін' не слід включати).
-        
-        В базе вже є (їх не потрібно додавати):{str(synonyms)}
+    try:
+        prompt = f"""
+        Це завдання для створення **векторного простору** для медичних термінів.  
+        Перелічіть **усі можливі варіанти написання** для медичного терміну **"{standard_name}"**.  
+        Усі варіанти мають стосуватися **виключно цього показника** і враховувати можливі варіанти, які зустрічаються в реальних медичних документах, лабораторних результатах та аналізах.  
+
+        **Включіть наступні типи варіантів:**  
+        - ✅ **Різні написання одного ж показника** (наприклад, 'Гемоглобін' > 'HGB', 'Аполіпопротеїн B' > 'Ліпопротеїн В').  
+        - ✅ **Переклади та альтернативні назви** (наприклад, 'Гемоглобін', 'Hemoglobin', 'Hgb') — враховуйте назви для українського сегменту.  
+        - ✅ **Варіанти з типовими помилками або орфографічними відхиленнями** (якщо такі поширені у реальних документах).  
+
+        **Не включайте:**  
+        - ❌ Значення, що належать до інших показників навіть із подібними назвами (наприклад, 'Гемоглобін А', 'Глікогемоглобін' тощо).  
+        - ❌ Зайві уточнення та загальні фрази ("тест", "тест на", "у крові", "у сечі", "загальний", "у сироватці", "аналіз") — залишайте тільки основний показник, щоб уникнути шуму у векторному просторі.
+
+        **Ціль — створити чисте і точне векторне представлення для цього показника у векторному просторі.**  
+
+        **Відомі варіанти, які вже є в базі (не потрібно додавати):**  
+        {str(synonyms)}  
         """
-        print(prompt)
+
+        # Отримуємо відповідь від OpenAI
         response_dict = get_llm_response(prompt, SynonymsList)
 
-        # Перевірка наявності синонімів у відповіді
         if "list_of_synonyms" in response_dict:
             list_of_synonyms = response_dict["list_of_synonyms"]
+
             for synonym_data in list_of_synonyms:
-                # Перевіряємо, чи вже існує синонім для цього стандартного імені
                 existing_synonym = db.query(AnalysisSynonym).join(StandardName).filter(
                     StandardName.id == standard_name_id,
                     AnalysisSynonym.synonym == synonym_data
                 ).first()
 
                 if not existing_synonym:
-                    # Якщо синоніма немає, додаємо його
                     add_analysis_synonym(db, standard_name_id, synonym_data)
-                    added_synonyms.append(synonym_data)  # Додаємо до списку доданих синонімів
-                    print(f'Синонім {synonym_data} для {standard_name} успішно додано')
+                    added_synonyms.append(synonym_data)
+                    print(f'✅ Додано новий синонім "{synonym_data}" для "{standard_name}"')
                 else:
-                    print(f"Синонім '{synonym_data}' для '{standard_name}' вже існує.")
+                    print(f"⚠️ Синонім '{synonym_data}' для '{standard_name}' вже існує.")
 
         return added_synonyms
+
     finally:
         db.close()
 
-#TODO
+
+
 def generate_unit_conversions_for_standard_name(db: Session, standard_name_id: int):
     """
     Генерує список унікальних пар одиниць вимірювання для заданого standard_name_id
@@ -139,7 +201,7 @@ def generate_unit_conversions_for_standard_name(db: Session, standard_name_id: i
             2. Формула (formula) базується на значенні 'x' (наприклад x * 10).
             3. Зворотня формула (reverse_formula) має розраховувати зворотнє перетворення.
             4. Усі формули повинні бути зручними для Python (ступінь `**`, замість `^`).
-            
+
             Приклад конверсії:
             Гемоглобін: г/дл → мг/мл
             Одиниця вимірювання: грами на децилітр (г/дл) та міліграми на мілілітр (мг/мл).
@@ -148,7 +210,7 @@ def generate_unit_conversions_for_standard_name(db: Session, standard_name_id: i
             Зворотна формула:
             г/дл=мг/мл/10
             Пояснення: 1 грам = 1000 міліграмів, і оскільки 1 децилітр = 100 мілілітрів, множимо на 10.
-            
+
             Приклад відповіді:
                 "unit_from_id": 1,
                 "unit_to_id": 2,
@@ -160,20 +222,20 @@ def generate_unit_conversions_for_standard_name(db: Session, standard_name_id: i
             llm_response = get_llm_response(prompt, Conversions)
 
             try:
-                    existing_conversion = db.query(UnitConversion).filter(
-                        UnitConversion.from_unit_id == llm_response['unit_from_id'],
-                        UnitConversion.to_unit_id == llm_response['unit_to_id'],
-                        UnitConversion.standard_name_id == standard_name_id
-                    ).first()
+                existing_conversion = db.query(UnitConversion).filter(
+                    UnitConversion.from_unit_id == llm_response['unit_from_id'],
+                    UnitConversion.to_unit_id == llm_response['unit_to_id'],
+                    UnitConversion.standard_name_id == standard_name_id
+                ).first()
 
-                    if not existing_conversion:
-                        new_conversion = UnitConversion(
-                            from_unit_id=llm_response['unit_from_id'],
-                            to_unit_id=llm_response['unit_to_id'],
-                            formula=llm_response['formula'],
-                            standard_name_id=standard_name_id
-                        )
-                        db.add(new_conversion)
+                if not existing_conversion:
+                    new_conversion = UnitConversion(
+                        from_unit_id=llm_response['unit_from_id'],
+                        to_unit_id=llm_response['unit_to_id'],
+                        formula=llm_response['formula'],
+                        standard_name_id=standard_name_id
+                    )
+                    db.add(new_conversion)
             except Exception as e:
                 print(f"Помилка під час парсингу LLM-відповіді: {e}")
 
